@@ -1,6 +1,7 @@
-package com.android.audric.bonjourmadame;
+package com.android.audric.bonjourmadame.ui.activity;
 
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,9 +9,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.audric.bonjourmadame.R;
 import com.android.audric.bonjourmadame.Request.PostsLoader;
 import com.android.audric.bonjourmadame.model.Post;
+import com.android.audric.bonjourmadame.ui.Intents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -64,6 +68,11 @@ public class LaunchActivity
     @Override
     public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
         Log.e(TAG, "load finished");
+
+        Intent i = new Intent(this, ListActivity.class);
+        i.putParcelableArrayListExtra(Intents.POSTS, new ArrayList<Post>(data));
+
+        startActivity(i);
     }
 
     @Override

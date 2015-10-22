@@ -1,5 +1,7 @@
 package com.android.audric.bonjourmadame.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -7,13 +9,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by audric on 21/10/15.
  */
-public class Post {
+public class Post implements Parcelable{
     private static final String TAG = "POST";
 
     private static final String ID_JSON = "id";
@@ -30,6 +35,10 @@ public class Post {
     private int published;
 
     private List<Photo> photos;
+
+    public Post() {
+
+    }
 
     public static Post fromJSON(JSONObject current) throws JSONException {
 
@@ -55,7 +64,21 @@ public class Post {
             Log.i(TAG, "Adding a photo: " + photo);
         }
 
+        Collections.sort(photos, new Photo.PhotoComparator());
+
         return photos;
+    }
+
+
+
+
+
+    public Photo getSmallestPictureUrl() {
+        return photos.get(0);
+    }
+
+    public Photo getBiggestPictureUrl() {
+        return photos.get(photos.size() - 1);
     }
 
 
@@ -96,5 +119,39 @@ public class Post {
         result = 31 * result + published;
         result = 31 * result + (photos != null ? photos.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(id);
+        dest.writeString(postUrl);
+        dest.writeString(caption);
+        dest.writeInt(published);
+        dest.writeList(photos);
+    }
+
+    public static final Parcelable.Creator<Post> CREATOR
+            = new Parcelable.Creator<Post>() {
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
+
+    private Post(Parcel in) {
+        id = in.readDouble();
+        postUrl = in.readString();
+        caption = in.readString();
+        published = in.readInt();
+        photos = new ArrayList<>();
+        in.readList(photos, Photo.class.getClassLoader());
     }
 }
