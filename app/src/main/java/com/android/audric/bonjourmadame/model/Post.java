@@ -154,4 +154,9 @@ public class Post implements Parcelable{
         photos = new ArrayList<>();
         in.readList(photos, Photo.class.getClassLoader());
     }
+
+
+    public String getCaption() {
+        return caption;
+    }
 }

@@ -3,11 +3,13 @@ package com.android.audric.bonjourmadame.ui.activity;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.audric.bonjourmadame.R;
 import com.android.audric.bonjourmadame.Request.PostsLoader;
@@ -35,7 +37,19 @@ public class LaunchActivity
 
 
         getLoaderManager().initLoader(GET_POST_ID, null, this);
+
+        Button retryButton = (Button) findViewById(R.id.retryButton);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showView(findViewById(R.id.progressBar), true);
+                showView(findViewById(R.id.retryButton), false);
+                getLoaderManager().restartLoader(GET_POST_ID, null, LaunchActivity.this);
+            }
+        });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,16 +81,27 @@ public class LaunchActivity
 
     @Override
     public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
-        Log.e(TAG, "load finished");
+        if(data != null) {
+            Intent i = new Intent(this, PostListActivity.class);
+            i.putParcelableArrayListExtra(Intents.POSTS, new ArrayList<>(data));
 
-        Intent i = new Intent(this, ListActivity.class);
-        i.putParcelableArrayListExtra(Intents.POSTS, new ArrayList<Post>(data));
-
-        startActivity(i);
+            startActivity(i);
+            finish();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), R.string.download_bm_posts_error,
+                    Toast.LENGTH_LONG).show();
+            showView(findViewById(R.id.progressBar), false);
+            showView(findViewById(R.id.retryButton), true);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Post>> loader) {
         /* Nothing to do */
+    }
+
+    private void showView(View v, boolean show) {
+        v.setVisibility((show ? View.VISIBLE : View.INVISIBLE));
     }
 }

@@ -24,8 +24,16 @@
             android:label="@string/title_activity_list" >
         </activity>
         <activity
-            android:name=".ui.activity.ListActivity"
-            android:label="@string/title_activity_photo" >
+            android:name=".ui.activity.PostListActivity"
+            android:label="@string/title_post_list" >
+        </activity>
+        <activity
+            android:name=".ui.activity.PostDetailActivity"
+            android:label="@string/title_post_detail"
+            android:parentActivityName=".ui.activity.PostListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.audric.bonjourmadame.ui.activity.PostListActivity" />
         </activity>
     </application>
 

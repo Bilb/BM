@@ -6,4 +6,5 @@ package com.android.audric.bonjourmadame.ui;
 public class Intents {
 
     public static final String POSTS = "POSTS";
+    public static final String POST = "POST";
 }
