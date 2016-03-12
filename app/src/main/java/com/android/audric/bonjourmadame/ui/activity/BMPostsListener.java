@@ -8,5 +8,5 @@ import java.util.List;
  * Created by audric on 22/10/15.
  */
 public interface BMPostsListener {
-    public List<Post> getPosts();
+    List<Post> getPosts();
 }

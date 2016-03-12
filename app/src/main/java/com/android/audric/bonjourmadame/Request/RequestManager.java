@@ -1,13 +1,11 @@
 package com.android.audric.bonjourmadame.Request;
 
-import android.util.Log;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreProtocolPNames;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -19,8 +17,12 @@ import java.io.InputStreamReader;
 public class RequestManager {
 
     private static String tumblrToken = "2qET0uQCcMsWWG5aSd6bDyxGnEalx045VFaiboVrd4YuCp1HIz";
-    private static String baseURL = "https://api.tumblr.com/v2/blog/bonjourmadame.fr/";
+    private static String baseURL = "https://api.tumblr.com/v2/blog/dites.bonjourmadame.fr/";
     private static String postsURL = baseURL + "posts";
+    private static int limitPost = 200;
+
+
+    private static final String fakeUserAgent = "Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/31.0";
 
 
     private static final String getPostsUrlWithToken() {
@@ -30,9 +32,12 @@ public class RequestManager {
 
 
 
-    public static String getPosts() {
+    public static synchronized String getPosts(int currentPage, int postsPerPage) {
         DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
-        HttpGet get = new HttpGet(getPostsUrlWithToken());
+        httpclient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, fakeUserAgent);
+
+        HttpGet get = new HttpGet(getPostsUrlWithToken() + "&limit=" + postsPerPage + "&offset="
+                + (postsPerPage * currentPage) );
 
         InputStream inputStream = null;
         String result = null;
@@ -60,9 +65,4 @@ public class RequestManager {
         }
         return result;
     }
-
-
-
-
-
 }

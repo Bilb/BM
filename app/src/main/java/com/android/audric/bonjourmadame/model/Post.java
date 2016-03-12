@@ -61,7 +61,6 @@ public class Post implements Parcelable{
         for( int i = 0; i < altSizeArray.length() ; i++) {
             Photo photo = Photo.fromJSON(altSizeArray.getJSONObject(i));
             photos.add(photo);
-            Log.i(TAG, "Adding a photo: " + photo);
         }
 
         Collections.sort(photos, new Photo.PhotoComparator());

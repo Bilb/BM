@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.audric.bonjourmadame.BonjourMadameApplication;
 import com.android.audric.bonjourmadame.R;
 import com.android.audric.bonjourmadame.Request.PostsLoader;
 import com.android.audric.bonjourmadame.model.Post;
@@ -50,41 +51,16 @@ public class LaunchActivity
     }
 
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_launch, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
     @Override
     public Loader<List<Post>> onCreateLoader(int id, Bundle args) {
-        return new PostsLoader(getApplicationContext());
+        return new PostsLoader(getApplicationContext(), 0, 20);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
         if(data != null) {
-            Intent i = new Intent(this, PostListActivity.class);
-            i.putParcelableArrayListExtra(Intents.POSTS, new ArrayList<>(data));
-
+            ((BonjourMadameApplication) getApplication()).addPosts(data);
+            Intent i = new Intent(this, SimpleImageActivity.class);
             startActivity(i);
             finish();
         }

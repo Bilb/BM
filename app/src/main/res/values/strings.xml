@@ -2,10 +2,14 @@
     <string name="app_name">Bonjour Madame</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_list">ListActivity</string>
-    <string name="title_activity_photo">PhotoActivity</string>
-    <string name="title_post_list">Posts</string>
-    <string name="title_post_detail">Post Detail</string>
+    <string name="bonjour_madame">Bonjour Madame</string>
     <string name="download_bm_posts_error">Impossible de récupérer les derniers posts</string>
-    <string name="retry">Re essayer</string>
+    <string name="retry">Reessayer</string>
+    <string name="title_activity_view_pager">Bonjour Madame</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_pager">PagerActivity</string>
+    <string name="descr_image">Image</string>
+    <string name="ac_name_image_grid">Image Grid Example</string>
+    <string name="ac_name_image_pager">Image Pager Example</string>
 </resources>

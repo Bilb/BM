@@ -2,7 +2,6 @@ package com.android.audric.bonjourmadame.Request;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -28,20 +27,13 @@ public class PostsLoader extends AsyncTaskLoader<List<Post>> {
     private static String JSON_RESPONSE = "response";
     private static String JSON_BLOG = "blog";
     private static String JSON_POSTS = "posts";
+    private final int postsPerPage;
+    private final int page;
 
-
-    /**
-     * Stores away the application context associated with context.
-     * Since Loaders can be used across multiple activities it's dangerous to
-     * store the context directly; always use {@link #getContext()} to retrieve
-     * the Loader's Context, don't use the constructor argument directly.
-     * The Context returned by {@link #getContext} is safe to use across
-     * Activity instances.
-     *
-     * @param context used to retrieve the application context.
-     */
-    public PostsLoader(Context context) {
+    public PostsLoader(Context context, int currentPage, int postsPerPage) {
         super(context);
+        this.page = currentPage;
+        this.postsPerPage = postsPerPage;
         onContentChanged();
     }
 
@@ -57,9 +49,10 @@ public class PostsLoader extends AsyncTaskLoader<List<Post>> {
         cancelLoad();
     }
 
+
     @Override
     public List<Post> loadInBackground() {
-        String posts = RequestManager.getPosts();
+        String posts = RequestManager.getPosts(page, postsPerPage);
 
 
         if (!TextUtils.isEmpty(posts)) {
@@ -80,9 +73,7 @@ public class PostsLoader extends AsyncTaskLoader<List<Post>> {
                         postList.add(post);
                     }
 
-                    Log.e(TAG, "post size:" + postList.size());
                     return postList;
-
                 }
                 else {
                     Log.e(TAG, "Failed to find status or status is not 200");
