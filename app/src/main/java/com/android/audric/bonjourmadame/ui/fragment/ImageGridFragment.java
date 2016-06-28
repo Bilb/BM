@@ -27,6 +27,10 @@ import com.android.audric.bonjourmadame.ui.activity.SimpleImageActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.LoadedFrom;
+import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -113,6 +117,20 @@ public class ImageGridFragment extends Fragment
             posts = ((BonjourMadameApplication) ImageGridFragment.this.getActivity().getApplication()).getPosts();
             inflater = LayoutInflater.from(context);
 
+
+            BitmapDisplayer displayer = new FadeInBitmapDisplayer(500) {
+
+                @Override
+                public void display(Bitmap bitmap, ImageAware imageAware,
+                                    LoadedFrom loadedFrom) {
+                    if (loadedFrom != LoadedFrom.MEMORY_CACHE) {
+                        super.display(bitmap, imageAware, loadedFrom);
+                    } else {
+                        ((ImageView) imageAware.getWrappedView()).setImageBitmap(bitmap);
+                    }
+                }
+            };
+
             options = new DisplayImageOptions.Builder()
                     .showImageOnLoading(R.drawable.ic_stub)
                     .showImageForEmptyUri(R.drawable.ic_empty)
@@ -121,7 +139,11 @@ public class ImageGridFragment extends Fragment
                     .cacheOnDisk(true)
                     .considerExifParams(true)
                     .bitmapConfig(Bitmap.Config.RGB_565)
+                    .displayer(displayer)
                     .build();
+
+
+
         }
 
         @Override
@@ -156,6 +178,7 @@ public class ImageGridFragment extends Fragment
                 holder = (ViewHolder) view.getTag();
             }
 
+
             ImageLoader.getInstance()
                     .displayImage(posts.get(position).getBiggestPictureUrl().getUrl(), holder.imageView, options, new SimpleImageLoadingListener() {
                         @Override
@@ -175,6 +198,7 @@ public class ImageGridFragment extends Fragment
                             holder.progressBar.setVisibility(View.GONE);
 
                         }
+
                     }, new ImageLoadingProgressListener() {
                         @Override
                         public void onProgressUpdate(String imageUri, View view, int current, int total) {
