@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,9 +13,8 @@ import com.android.audric.bonjourmadame.BonjourMadameApplication;
 import com.android.audric.bonjourmadame.R;
 import com.android.audric.bonjourmadame.Request.PostsLoader;
 import com.android.audric.bonjourmadame.model.Post;
-import com.android.audric.bonjourmadame.ui.Intents;
+import com.android.audric.bonjourmadame.notification.BMNotificationManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,7 +45,11 @@ public class LaunchActivity
                 getLoaderManager().restartLoader(GET_POST_ID, null, LaunchActivity.this);
             }
         });
+
+        BMNotificationManager.scheduleBMAlarm(this);
     }
+
+
 
 
     @Override
